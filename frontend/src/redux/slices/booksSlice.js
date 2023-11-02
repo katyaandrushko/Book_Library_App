@@ -4,8 +4,8 @@ import createBookWithID from '../../utils/createBookWithID'
 import { setError } from './errorSlice'
 
 const initialState = {
-  //   books: [],
-  //   isLoadingViaAPI: false,
+  books: [],
+  isLoadingViaAPI: false,
 }
 
 export const fetchBook = createAsyncThunk(
@@ -45,52 +45,39 @@ const booksSlice = createSlice({
       })
     },
   },
+  // OPTION 1
+  extraReducers: {
+    [fetchBook.pending]: (state) => {
+      state.isLoadingViaAPI = true
+    },
+    [fetchBook.fulfilled]: (state, action) => {
+      state.isLoadingViaAPI = false
+      if (action?.payload?.title && action?.payload?.author) {
+        state.books.push(createBookWithID(action.payload, 'API'))
+      }
+    },
+    [fetchBook.rejected]: (state) => {
+      state.isLoadingViaAPI = false
+    },
+  },
+  // // OPTION 2
+  // extraReducers: (builder) => {
+  //     builder.addCase(fetchBook.pending, (state) => {
+  //         state.isLoadingViaAPI = true;
+  //     });
+  //     builder.addCase(fetchBook.fulfilled, (state, action) => {
+  //         state.isLoadingViaAPI = false;
+  //         if (action.payload.title && action.payload.author) {
+  //             state.books.push(createBookWithID(action.payload, 'API'));
+  //         }
+  //     });
+  //     builder.addCase(fetchBook.rejected, (state) => {
+  //         state.isLoadingViaAPI = false;
+  //     });
+  // },
 })
 
-// OPTION 1
-//   extraReducers: {
-//     [fetchBook.pending]: (state) => {
-//       state.isLoadingViaAPI = true
-//     },
-//     [fetchBook.fulfilled]: (state, action) => {
-//       state.isLoadingViaAPI = false
-//       if (action?.payload?.title && action?.payload?.author) {
-//         state.books.push(createBookWithID(action.payload, 'API'))
-//       }
-//     },
-//     [fetchBook.rejected]: (state) => {
-//       state.isLoadingViaAPI = false
-//     },
-//   },
-// // OPTION 2
-// extraReducers: (builder) => {
-//     builder.addCase(fetchBook.pending, (state) => {
-//         state.isLoadingViaAPI = true;
-//     });
-//     builder.addCase(fetchBook.fulfilled, (state, action) => {
-//         state.isLoadingViaAPI = false;
-//         if (action.payload.title && action.payload.author) {
-//             state.books.push(createBookWithID(action.payload, 'API'));
-//         }
-//     });
-//     builder.addCase(fetchBook.rejected, (state) => {
-//         state.isLoadingViaAPI = false;
-//     });
-// },
-// })
-
 export const { addBook, deleteBook, toggleFavorite } = booksSlice.actions
-
-export const thunkFunction = async (dispatch, getState) => {
-  try {
-    const res = await axios.get('http://localhost:4000/random-book')
-    if (res?.data?.author && res?.data?.title) {
-      dispatch(addBook(createBookWithID(res.data, 'API')))
-    }
-  } catch (error) {
-    console.log('Eror fetching random book', error)
-  }
-}
 
 export const selectBooks = (state) => state.books.books
 export const selectIsLoadingViaAPI = (state) => state.books.isLoadingViaAPI
