@@ -4,7 +4,7 @@ import axios from 'axios'
 // import { v4 as uuidv4 } from 'uuid'
 import booksData from '../../data/books.json'
 import './BookForm.css'
-import { addBook, thunkFunction } from '../../redux/slices/bookSlice'
+import { addBook, fetchBook } from '../../redux/slices/booksSlice'
 import createBookWithID from '../../utils/createBookWithID'
 
 const BookForm = () => {
@@ -44,7 +44,7 @@ const BookForm = () => {
   }
 
   const handleAddRandomBookViaAPI = async () => {
-    dispatch(thunkFunction)
+    dispatch(fetchBook)
   }
 
   return (

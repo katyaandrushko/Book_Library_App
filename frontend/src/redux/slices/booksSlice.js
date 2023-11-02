@@ -8,21 +8,21 @@ const initialState = {
   //   isLoadingViaAPI: false,
 }
 
-// export const fetchBook = createAsyncThunk(
-//   'books/fetchBook',
-//   async (url, thunkAPI) => {
-//     try {
-//       const res = await axios.get(url)
-//       return res.data
-//     } catch (error) {
-//       thunkAPI.dispatch(setError(error.message))
-//       // OPTION 1
-//       return thunkAPI.rejectWithValue(error)
-//       // // OPTION 2
-//       // throw error
-//     }
-//   }
-// )
+export const fetchBook = createAsyncThunk(
+  'books/fetchBook',
+  async (url, thunkAPI) => {
+    try {
+      const res = await axios.get(url)
+      return res.data
+    } catch (error) {
+      thunkAPI.dispatch(setError(error.message))
+      // OPTION 1
+      return thunkAPI.rejectWithValue(error)
+      // // OPTION 2
+      // throw error
+    }
+  }
+)
 
 const booksSlice = createSlice({
   name: 'books',
